@@ -1,0 +1,836 @@
+    
+    
+@ВПроекте
+структура ParsingTemplate
+    обз пер regv: Образец
+    обз пер repl: Строка
+
+    статический метод from(regv: Образец, repl: Строка): ParsingTemplate
+        возврат новый ParsingTemplate(regv,repl)
+    ; 
+
+	метод parse(Источник: Строка): Строка
+        знч Результат = Источник.Заменить(новый Образец(" %regv (?im)"), repl) 
+        возврат Результат.Сократить()
+	;
+
+;
+
+
+метод parse(Данные: Массив<ParsingTemplate>, Источник: Строка): Строка
+    пер Рез = Источник
+    для Элемент из Данные  
+        Рез = Элемент.parse(Рез)    
+    ;
+    возврат Рез
+;
+
+
+
+@ВПроекте
+метод def_arr(): Массив<ParsingTemplate>
+    возврат [новый ParsingTemplate('в выходной', " в субботу ")]
+;
+
+@ВПроекте
+метод string_representations_of_number(): Массив<ParsingTemplate>
+    возврат  
+    [
+        // Перед строкой истоником не должно быть пробелов - обрабатываются при получении значений
+
+        //:%s/\v\(r\"\((.*)\",/('\1',
+        
+        // // дни недели
+        // новый ParsingTemplate('понедельник(?:а)?', " `wda` "),
+        // новый ParsingTemplate('вторник(?:а)?', " `wdb` "),
+        // новый ParsingTemplate('сред[уаы]', " `wdc` "),
+        // новый ParsingTemplate('четверг(?:а)?', " `wdd` "),
+        // новый ParsingTemplate('пятниц[уаы]', " `wde` "),
+        // новый ParsingTemplate('суббот[уаы]', " `wdf` "),
+        // новый ParsingTemplate('воскресень[ея]', " `wdg` "),
+
+        // одиночные числа
+        новый ParsingTemplate('ноль', " 0 "),
+        новый ParsingTemplate('нуль', " 0 "),
+        новый ParsingTemplate('один', " 1 "),
+        новый ParsingTemplate('одна', " 1 "),
+        новый ParsingTemplate('одну', " 1 "),
+        новый ParsingTemplate('одной', " 1 "),
+        новый ParsingTemplate('два', " 2 "),
+        новый ParsingTemplate('две', " 2 "),
+        новый ParsingTemplate('двух', " 2 "),
+        новый ParsingTemplate('три', " 3 "),
+        новый ParsingTemplate('трех', " 3 "),
+        новый ParsingTemplate('четыре', " 4 "),
+        новый ParsingTemplate('четырех', " 4 "),
+        новый ParsingTemplate('пять', " 5 "),
+        новый ParsingTemplate('пяти', " 5 "),
+        новый ParsingTemplate('шесть', " 6 "),
+        новый ParsingTemplate('шести', " 6 "),
+        новый ParsingTemplate('семь', " 7 "),
+        новый ParsingTemplate('семи', " 7 "),
+        новый ParsingTemplate('восемь', " 8 "),
+        новый ParsingTemplate('восьми', " 8 "),
+        новый ParsingTemplate('девять', " 9 "),
+        новый ParsingTemplate('девяти', " 9 "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)первого', " $1 1-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)второго', " $1 2-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)третьего', " $1 3-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)четвертого', " $1 4-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)пятого', " $1 5-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)шестого', " $1 6-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)седьмого', " $1 7-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)восьмого', " $1 8-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)девятого', " $1 9-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)десятого', " $1 10-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)одиннадцатого', " $1 11-го "),
+        новый ParsingTemplate('(минуту\s+|минуты\s+|минут\s+)двенадцатого', " $1 12-го "),
+        новый ParsingTemplate('перво(?:е|го)', " 1 "),
+        новый ParsingTemplate('первый', " 1 "),
+        новый ParsingTemplate('первую', " 1 "),
+        новый ParsingTemplate('второ(?:е|й|го)', " 2 "),
+        новый ParsingTemplate('вторую', " 2 "),
+        новый ParsingTemplate('треть(?:е|ю|его)', " 3 "),
+        новый ParsingTemplate('третий', " 3 "),
+        новый ParsingTemplate('четверто(?:е|го)', " 4 "),
+        новый ParsingTemplate('четвертый', " 4 "),
+        новый ParsingTemplate('четвертую', " 4 "),
+        новый ParsingTemplate('пято(?:е|го)', " 5 "),
+        новый ParsingTemplate('пятый', " 5 "),
+        новый ParsingTemplate('пятую', " 5 "),
+        новый ParsingTemplate('шесто(?:е|й|го)', " 6 "),
+        новый ParsingTemplate('шестую', " 6 "),
+        новый ParsingTemplate('седьмо(?:е|й|го)', " 7 "),
+        новый ParsingTemplate('седьмую', " 7 "),
+        новый ParsingTemplate('восьмо(?:е|й|го)', " 8 "),
+        новый ParsingTemplate('восьмую', " 8 "),
+        новый ParsingTemplate('девято(?:е|го)', " 9 "),
+        новый ParsingTemplate('девятый', " 9 "),
+        новый ParsingTemplate('девятую', " 9 "),
+        // 10-19
+        новый ParsingTemplate('десять', " 10 "),
+        новый ParsingTemplate('десяти', " 10 "),
+        новый ParsingTemplate('десято(?:е|го)', " 10 "),
+        новый ParsingTemplate('одиннадцат(?:ь|ое|ого|и)', " 11 "),
+        новый ParsingTemplate('двенадцат(?:ь|ое|ого|и)', " 12 "),
+        новый ParsingTemplate('тринадцат(?:ь|ое|ого|и)', " 13 "),
+        новый ParsingTemplate('четырнадцат(?:ь|ое|ого|и)', " 14 "),
+        новый ParsingTemplate('пятнадцат(?:ь|ое|ого|и)', " 15 "),
+        новый ParsingTemplate('шестнадцат(?:ь|ое|ого|и)', " 16 "),
+        новый ParsingTemplate('семнадцат(?:ь|ое|ого|и)', " 17 "),
+        новый ParsingTemplate('восемнадцат(?:ь|ое|ого|и)', " 18 "),
+        новый ParsingTemplate('девятнадцат(?:ь|ое|ого|и)', " 19 "),
+        // для десятками уже идут преобразованные числа
+        новый ParsingTemplate('двадцать\s+([1-9])', " 2$1 "),
+        новый ParsingTemplate('двадцати\s+([1-9])', " 2$1 "),
+        новый ParsingTemplate('тридцать\s+([1-9])', " 3$1 "),
+        новый ParsingTemplate('сорок\s+([1-9])', " 4$1 "),
+        новый ParsingTemplate('пятьдесят\s+([1-9])', " 5$1 "),
+        новый ParsingTemplate('шестьдесят\s+([1-9])', " 6$1 "),
+        новый ParsingTemplate('семьдесят\s+([1-9])', " 7$1 "),
+        новый ParsingTemplate('восемьдесят\s+([1-9])', " 8$1 "),
+        новый ParsingTemplate('девяносто\s+([1-9])', " 9$1 "),
+        новый ParsingTemplate('двадцат(?:ь|и|ое|ого)', " 20 "),
+        новый ParsingTemplate('тридцат(?:ь|и|ое|ого)', " 30 "),
+        новый ParsingTemplate('соро(?:к|а|ковое|кового)', " 40 "),
+        новый ParsingTemplate('пятьдесят ', " 50 "),
+        новый ParsingTemplate('пятидеся(?:ти|тое|того)', " 50 "),
+        новый ParsingTemplate('шестьдесят ', " 60 "),
+        новый ParsingTemplate('шестидеся(?:ти|тое|того)', " 60 "),
+        новый ParsingTemplate('семьдесят ', " 70 "),
+        новый ParsingTemplate('семидеся(?:ти|тое|того)', " 70 "),
+        новый ParsingTemplate('восемьдесят', " 80 "),
+        новый ParsingTemplate('восьмидеся(?:ти|тое|того)', " 80 "),
+        новый ParsingTemplate('девяност(?:о|ое|ого)', " 90 "),
+        // для сотнями уже идут преобразованные числа
+        новый ParsingTemplate('сто\s+([0-9][0-9])', " 1$1 "),
+        новый ParsingTemplate('сто\s+([0-9])', " 10$1 "),
+        новый ParsingTemplate('(?:сто|ста|сотого)', " 100 "),
+        новый ParsingTemplate('двести\s+([0-9][0-9])', " 2$1 "),
+        новый ParsingTemplate('двести\s+([0-9])', " 20$1 "),
+        новый ParsingTemplate('(?:двести|двухсот|двухсотого)', " 200 "),
+        новый ParsingTemplate('триста\s+([0-9][0-9])', " 3$1 "),
+        новый ParsingTemplate('триста\s+([0-9])', " 30$1 "),
+        новый ParsingTemplate('(?:триста|трехсот|трехсотого)', " 300 "),
+        новый ParsingTemplate('четыреста\s+([0-9][0-9])', " 4$1 "),
+        новый ParsingTemplate('четыреста\s+([0-9])', " 40$1 "),
+        новый ParsingTemplate('(?:четыреста|четырехсот|четырехсотого)', " 400 "),
+        новый ParsingTemplate('пятьсот\s+([0-9][0-9])', " 5$1 "),
+        новый ParsingTemplate('пятьсот\s+([0-9])', " 50$1 "),
+        новый ParsingTemplate('(?:пятьсот|пятиста|пятисотого)', " 500 "),
+        новый ParsingTemplate('шестьсот\s+([0-9][0-9])', " 6$1 "),
+        новый ParsingTemplate('шестьсот\s+([0-9])', " 60$1 "),
+        новый ParsingTemplate('(?:шестьсот|шестиста|шестисотого)', " 600 "),
+        новый ParsingTemplate('семьсот\s+([0-9][0-9])', " 7$1 "),
+        новый ParsingTemplate('семьсот\s+([0-9])', " 70$1 "),
+        новый ParsingTemplate('(?:семьсот|семиста|семисотого)', " 700 "),
+        новый ParsingTemplate('восемьсот\s+([0-9][0-9])', " 8$1 "),
+        новый ParsingTemplate('восемьсот\s+([0-9])', " 80$1 "),
+        новый ParsingTemplate('(?:восемьсот|восьмиста|восьмисотого)', " 800 "),
+        новый ParsingTemplate('девятьсот\s+([0-9][0-9])', " 9$1 "),
+        новый ParsingTemplate('девятьсот\s+([0-9])', " 90$1 "),
+        новый ParsingTemplate('(?:девятьсот|lдевятиста|девятисотого)', " 900 "),
+        // из тысяч - только 2
+        новый ParsingTemplate('(?:2|две)\s+?тысячи\s+(\d\d)', " 20$1 "),
+        // месяцы
+        новый ParsingTemplate('янв.*?', " `n01` "),
+        новый ParsingTemplate('фев.*?', " `n02` "),
+        новый ParsingTemplate('март.*?', " `n03` "),
+        новый ParsingTemplate('апр.*?', " `n04` "),
+        новый ParsingTemplate('мая ', " `n05` "),
+        новый ParsingTemplate('июн.*?', " `n06` "),
+        новый ParsingTemplate('июл.*?', " `n07` "),
+        новый ParsingTemplate('авг.*?', " `n08` "),
+        новый ParsingTemplate('сент.*?', " `n09` "),
+        новый ParsingTemplate('окт.*?', " `n10` "),
+        новый ParsingTemplate('ноя.*?', " `n11` "),
+        новый ParsingTemplate('дек.*?', " `n12` "),
+        // Разделители уберем
+        новый ParsingTemplate(',', " "),
+        новый ParsingTemplate(';', " "),
+        новый ParsingTemplate('\sи\s', " "), // слово 'и' можно спокойно убрать везде
+        новый ParsingTemplate('([^0-9])\s*(\.|\-|:|;|,)\s+(?![0-9])', " $1 ") // некоторые разделители можем убрать, если они не между чисел
+    ]
+;
+
+@ВПроекте
+метод string_representations_values(): Массив<ParsingTemplate>
+    пер ВозвИтог = новый Массив<ParsingTemplate>()
+    
+    пер М1: Массив<ParsingTemplate>  = этот.string_representations_of_number()
+    для Элемент из этот.def_arr()
+        М1.Добавить(Элемент)
+    ;
+
+    для Элемент из  М1
+        знч СтарОбразец = Элемент.regv
+        пер НовОбразец = новый Образец("(?:\\s)%СтарОбразец(?=,|:|;|\\-|\\.|\\s|$)")
+        ВозвИтог.Добавить(новый ParsingTemplate(НовОбразец, Элемент.repl))
+    ;
+
+    возврат ВозвИтог    
+;
+
+@ВПроекте
+метод preprocess_values(): Массив<ParsingTemplate> 
+    возврат [
+        новый ParsingTemplate(' спустя ', " через "),
+        новый ParsingTemplate(' полчаса ', " 30 минут "),
+        новый ParsingTemplate(' в час ', " в 1 час "),
+        новый ParsingTemplate(' через час ', " через 1 час "),
+        новый ParsingTemplate(' через минуту ', " через 1 минуту "),
+        новый ParsingTemplate(' через день ', " через 1 день "),
+        новый ParsingTemplate(' через неделю ', " через 1 неделю "),
+        новый ParsingTemplate(' через месяц ', " через 1 месяц  "),
+        новый ParsingTemplate(' через год ', " через 1 год "),
+        новый ParsingTemplate('после завтра', "послезавтра"), // на случай ошибки
+        новый ParsingTemplate('после послезавтра', "послепослезавтра"), // на случай ошибки
+        новый ParsingTemplate('ё', "е"),
+        новый ParsingTemplate('первова ', " первого "), // подарок неграмотной молодежи
+        новый ParsingTemplate('второва ', " второго "),
+        новый ParsingTemplate('третьева ', " третьего "),
+        новый ParsingTemplate('четвертова ', " четвертого "),
+        новый ParsingTemplate('пятова ', " пятого "),
+        новый ParsingTemplate('шестова ', " шестого "),
+        новый ParsingTemplate('седьмова ', " седьмого "),
+        новый ParsingTemplate('восьмова ', " восьмого "),
+        новый ParsingTemplate('девятова ', " девятого "),
+        новый ParsingTemplate('десятова ', " десятого "),
+        новый ParsingTemplate('одиннадцатова ', " одиннадцатого "),
+        новый ParsingTemplate('двенадцатова ', " двенадцатого "),
+        новый ParsingTemplate('тринадцатова ', " тринадцатого "),
+        новый ParsingTemplate('четырнадцатова ', " четырнадцатого "),
+        новый ParsingTemplate('пятнадцатова ', " пятнадцатого "),
+        новый ParsingTemplate('шестнадцатова ', " шестнадцатого "),
+        новый ParsingTemplate('семнадцатова ', " семнадцатого "),
+        новый ParsingTemplate('восемнадцатова ', " восемнадцатого "),
+        новый ParsingTemplate('девятнадцатова ', " девятнадцатого "), // подарок неграмотной молодежи
+        новый ParsingTemplate(' в этот ', " в "), // Уберем слова в этот, в эта, в эти
+        новый ParsingTemplate(' в эту ', " в "),  // Уберем слова в этот, в эта, в эти
+        новый ParsingTemplate(' в эти ', " в "),  // Уберем слова в этот, в эта, в эти
+        новый ParsingTemplate('ближайш(?<G1>ий|ие|ей|ую|ее|его)', "следующ$<G1>"), // синонимы, используем именованную группу G1
+        новый ParsingTemplate('(.*)\s+следующ(?<G1>ий|ие|ую|ей|ее|его)\s+(.*) ',"$1 `b` $3"), // Уберем слова следующ..., вместо него будет `b` - признак начала периода
+        новый ParsingTemplate(' на выходных ', " в выходной "),
+        новый ParsingTemplate(' в выходные ', " в выходной "),
+        новый ParsingTemplate('\s(?:в\s+)?пол(?<G1>пе|вт|тр|че|пя|ше|се|во|де|од|дв)'," в половину $<G1>")
+    ]
+;
+
+@ВПроекте
+метод postprocess_values(): Массив<ParsingTemplate> 
+    возврат [
+        // Общие замены в начале
+        новый ParsingTemplate('(.*)(\sполдень\s|\sполудня\s)(.*)', "`sd` $1 12 часов $3"),
+        новый ParsingTemplate('(.*)(\sполночь\s|\sдо\s+полуночи\s)(.*)',"`sn` $1 12 часов $3"),
+        // Отступы от сегодня
+        новый ParsingTemplate(' послепослезавтра ', " `bd` `+d3` "),
+        новый ParsingTemplate(' послезавтра ', " `bd` `+d2` "),
+        новый ParsingTemplate(' завтра ', " `bd` `+d1` "),
+        // Анализ конкретной даты СЛЕДУЩ... = `b`
+        новый ParsingTemplate('(.*)\s`b`\s*(\sгод\s|\sгода\s|\sлет\s)(.*)',"$1 `by` `+y1` $3 "),
+        новый ParsingTemplate('(.*)\s`b`\s*(\sмесяц\s|\sмесяца\s|\sмесяцев\s)(.*)',"$1 `bn` `+n1` $3 "),
+        новый ParsingTemplate('(.*)\s`b`\s*(\sнеделе\s|\sнеделю\s|\sнедели\s|\sнедель\s)(.*)',"$1 `bw` `+w1` $3 "),
+        новый ParsingTemplate('(.*)\s`b`\s*(\sдень\s|\sдня\s|\sдней\s)(.*)',"$1 `bd` `+d1` $3 "),
+        // Анализируем ЧЕРЕЗ
+        // Анализ конкретной даты ЧЕРЕЗ, передвигаем в конец, чтобы использовать несколько раз
+        новый ParsingTemplate('(.*)\sчерез\s+(и\s)?(\d+)\s*(\sгод\s|\sгода\s|\sлет\s)(.*)',"$1 `+y$3` через $5 "),
+        новый ParsingTemplate('(.*)\s+через\s+(и\s)?(\d+)\s*(\sмесяц\s|\sмесяца\s|\sмесяцев\s)(.*)',"$1 `+n$3` через $5 "),
+        новый ParsingTemplate('(.*)\sчерез\s+(и\s)?(\d+)\s*(\sнеделю\s|\sнедели\s|\sнедель\s)(.*)',"$1 `+w$3` через $5 "),
+        новый ParsingTemplate('(.*)\sчерез\s+(и\s)?(\d+)\s*(\sдень\s|\sдня\s|\sдней\s)(.*)',"$1 `+d$3` через $5 "),
+        //через дни недели
+        новый ParsingTemplate('\sчерез\s(\d+\s+)?понедельник(?:а)?', " `+wda$1` "),
+        новый ParsingTemplate('\sчерез\s(\d+\s+)?вторник(?:а)?', " `+wdb$1` "),
+        новый ParsingTemplate('\sчерез\s(\d+\s+)?сред[уаы]', " `+wdc$1` "),
+        новый ParsingTemplate('\sчерез\s(\d+\s+)?четверг(?:а)?', " `+wdd$1` "),
+        новый ParsingTemplate('\sчерез\s(\d+\s+)?пятниц[уаы]', " `+wde$1` "),
+        новый ParsingTemplate('\sчерез\s(\d+\s+)?суббот[уаы]', " `+wdf$1` "),
+        новый ParsingTemplate('\sчерез\s(\d+\s+)?воскресень[ея]', " `+wdg$1` "),
+        // Анализ конкретного времени СЛЕДУЮЩ...
+        новый ParsingTemplate('(.*)\s`b`\s*(\sчас\s|\sчаса\s|\sчасов\s)(.*)',"$1 `bh` `+h1` $3 "), // представление времени только в часах
+        // Анализ конкретного времени ЧЕРЕЗ
+        новый ParsingTemplate('(.*)\sчерез\s+([0-9]?[0-9]?[0-9])\s*(\sчас\s|\sчаса\s|\sчасов\s)\s*(?:и\s)?([0-9]?[0-9]?[0-9])\s*(\sминут\s|\sминуту\s)(.*)',"$1 `+h$2` `+m$4` через $6"), // представление времени в часах, минутах
+        новый ParsingTemplate('(.*)\sчерез\s+([0-9]?[0-9]?[0-9])\s*(\sминут\s|\sминуту\s)\s*(?:и\s)?([0-9]?[0-9]?[0-9])\s*(\sчас\s|\sчаса\s|\sчасов\s)(.*)',"$1 `+h$2` `+m$4` через $6"), // представление времени в минутах, часах
+        новый ParsingTemplate('(.*)\sчерез\s+([0-2]?[0-9])(:|\s)\s?([0-5])\s*([0-9])(.*)',"$1  `+h$2` `+m$4$5` через $6"), // представление времени в формате ЧЧ ММ, минуты указываются всегда в виде 2 знаков
+        новый ParsingTemplate('(.*)\sчерез\s+([0-2]?[0-9])\s*(\sчас\s|\sчаса\s|\sчасов\s)(.*)',"$1  `+h$2` `+m00` через $4"), // представление времени только в часах
+        новый ParsingTemplate('(.*)\sчерез\s+(\d+)\s*(\sминуту\s|\sминут\s|\sминуты\s)(.*)',"$1  `+m$2` через $4"), // представление времени только в минутах
+        // Анализ конкретного времени
+        новый ParsingTemplate('(.*)\s(\d+)(\s*минуту\s+|\s*минуты\s+|\s*минут\s+)после\s+([0-2]?[0-9])(.*)',"$1 `+m$2` `h$4` $5"), // минуты после часов
+        новый ParsingTemplate('(.*)(час|часа|часов)\s+с четвертью\s(.*)',"$1$2 15 минут $3"), // часы с четвертью
+        новый ParsingTemplate('(.*)\s+в\s+четверть\s+([0-2]?[0-9])\s+(.*)',"$1 `-m45` в $2 часов $3"), // в четверть часов
+        новый ParsingTemplate('(.*)\s+в\s+половин(?:е|у)\s+([0-2]?[0-9])\s+(.*)',"$1 `-m30` в $2 часов $3"), // в половине часов
+        новый ParsingTemplate('(.*)\s+с\s+половиной\s+(час|часа|часов)\s+(.*)',"$1 $2 30 минут $3"), // часы с половиной
+        новый ParsingTemplate('(.*)\s([0-5]?[0-9])(\s*минуту\s+|\s*минуты\s+|\s*минут\s+)([0-1]?[0-9])-го\s(.*)',"$1 `-h1` `m$2` `h$4` $5"), // N минут h-го
+        новый ParsingTemplate('(.*)(?:\sбез\s|\sза\s)s*([0-2]?[0-9])(\s+|\s+минуты\s+|\s+минут\s+)([0-2]?[0-9])(.*)',"$1 `-m$2` в $4 часов $5"), // без|за N минут записывается в спец.формате `-mN`
+        новый ParsingTemplate('(.*)\s+(час|часа|часов)\s+и\s+([0-5]?[0-9])\s*(минут)(.*)',"$1 $2 $3 $4$5"), // часов и N минут - уберем "и"
+        новый ParsingTemplate('(.*)\sв\s+([0-2]?[0-9])\s*(\sчас\s|\sчаса\s|\sчасов\s)\s*([0-5]?[0-9])\s*(\sминут\s|\sминуту\s)(.*)',"$1 `h$2` `m$4` $6"), // представление времени в часах, минутах
+        новый ParsingTemplate('(.*)\sв\s+([0-2]?[0-9])(:|\s)\s?([0-5])\s*([0-9])(.*)',"$1 `h$2` `m$4$5` $6"), // представление времени в формате ЧЧ ММ, минуты указываются всегда в виде 2 знаков
+        новый ParsingTemplate('(.*)\sв\s+([0-2]?[0-9])\s*(\sутра\s|\sвечера\s)(.*)',"$1 в $2 часов $3 $4"), // вместо часов слово утра или вечера
+        новый ParsingTemplate('(.*)\sв\s+([0-2]?[0-9])\s*(\sчас\s|\sчаса\s|\sчасов\s)(.*)',"$1 `h$2` $4"), // представление времени только в часах
+        // Анализ конкретных дат
+        // Указание дня недели
+        новый ParsingTemplate('\s(?:в|во)(?:\s*`b`\s*)?\s*([1-5])?\s*понедельник '," `wda$1` "),
+        новый ParsingTemplate('\s(?:в|во)(?:\s*`b`\s*)?\s*([1-5])?\s*вторник '," `wdb$1` "),
+        новый ParsingTemplate('\s(?:в|во)(?:\s*`b`\s*)?\s*([1-5])?\s*среду ', " `wdc$1` "),
+        новый ParsingTemplate('\s(?:в|во)(?:\s*`b`\s*)?\s*([1-5])?\s*четверг '," `wdd$1` "),
+        новый ParsingTemplate('\s(?:в|во)(?:\s*`b`\s*)?\s*([1-5])?\s*пятницу '," `wde$1` "),
+        новый ParsingTemplate('\s(?:в|во)(?:\s*`b`\s*)?\s*([1-5])?\s*субботу '," `wdf$1` "),
+        новый ParsingTemplate('\s(?:в|во)(?:\s*`b`\s*)?\s*([1-5])?\s*воскресенье '," `wde$1` "),
+        // Указание даты
+        новый ParsingTemplate('(.*?)([0-3]?[0-9])\s+(`n[0-1]?[0-9]`)\s+(20)?(?:([2-4]?[0-9])(?:\s))?(.*)',"$1`d$2` $3 `y20$5` $6"), // месяц уже определен
+        новый ParsingTemplate('(.*?)([0-3]?[0-9])\s*[\s|/|\-|\.]([0-1]?[0-9])\s*[\s|/|\-|\.]\s*(20)?(?:([2-4]?[0-9])(?:\s))?(.*)',"$1`d$2` `n$3` `y20$5` $6"), // дату пытаемся разобрать
+        новый ParsingTemplate('`y20`', ""), // уберем разбор года, `y20` - это текущий год
+        // Если были указания или смещения года - месяц года сбросить в 1
+        новый ParsingTemplate('(.*)(`[\-|\+]?y\d*`)(.*)', " $1 `by` $2$3 "),
+        // Но если были указания месяца - сбрасывать в начало года не нужно
+        новый ParsingTemplate('(.*)(`n\d*`)(.*)`by`(.*)', " $1$2$3$4 "),
+        новый ParsingTemplate('(.*)`by`(.*)(`n\d*`)(.*)', " $1$2$3$4 "),
+        // Если были указания или смещения месяца - день меяца сбросить в 1
+        новый ParsingTemplate('(.*)(`[\-|\+]?n\d*`)(.*)', " $1 `bn` $2$3 "),
+        // Но если были указания дня - сбрасывать в начало месяца не нужно
+        новый ParsingTemplate('(.*)(`d\d*`)(.*)`bn`(.*)', " $1$2$3$4 "),
+        новый ParsingTemplate('(.*)`bn`(.*)(`d\d*`)(.*)', " $1$2$3$4 "),
+        // уже было указано начало месяца
+        новый ParsingTemplate('(.*)(`bn`)(.*)`bn`(.*)', " $1$2$3$4 "),
+        // Если были указания часа - минуты сбросить в 1
+        новый ParsingTemplate('(.*)(`h\d*`)(.*)', " $1 `bh` $2$3 "),
+        // Но если были указания минут - сбрасывать в начало часа не нужно
+        новый ParsingTemplate('(.*)(`m\d*`)(.*)`bh`(.*)', " $1$2$3$4 "),
+        новый ParsingTemplate('(.*)`bh`(.*)(`m\d*`)(.*)', " $1$2$3$4 "),
+        // Сохранение слова-признака в строке
+        // новый ParsingTemplate('(.*)(\sвечера\s)(.*)', "`se` $1 $3"), // слово-признак сохраняется в строке в специальном формате
+        // новый ParsingTemplate('(.*)(\sдня\s)(.*)', "`sd` $1 $3"), // слово-признак сохраняется в строке в специальном формате
+        // новый ParsingTemplate('(.*)(\sутра\s)(.*)', "`sm` $1 $3"), // слово-признак сохраняется в строке в специальном формате
+        // новый ParsingTemplate('(.*)(\sночи\s)(.*)', "`sn` $1 $3"), // слово-признак сохраняется в строке в специальном формате
+        новый ParsingTemplate('(.*)(\sвечера\s|\sвечером\s)(.*)', "`se` $1 $3"), // слово-признак сохраняется в строке в специальном формате
+        новый ParsingTemplate('(.*)(\sдня\s|\sднем\s|\sпополудни\s)(.*)', "`sd` $1 $3"), // слово-признак сохраняется в строке в специальном формате
+        новый ParsingTemplate('(.*)(\sутра\s|\sутром\s)(.*)', "`sm` $1 $3"), // слово-признак сохраняется в строке в специальном формате
+        новый ParsingTemplate('(.*)(\sночи\s|\sночью\s)(.*)', "`sn` $1 $3"), // слово-признак сохраняется в строке в специальном формате
+        новый ParsingTemplate('^(?!.*(`[\-|\+]?[h|m]\d+`|`bh`|`s[m|e|n|d]`))(.*)'," $1 $2 `nt` "), // если не находим никаких признаков времени - ставим специальное время
+        новый ParsingTemplate('^(?!.*(`[\-|\+]?[y|n|d|w]\d+`|`wd[a-g]`|`b[y|n|w|d]`))(.*)'," $1 $2 `nd` "), // если не находим никаких признаков даты - ставим специальную дату
+        //  Общие замены в конце
+        новый ParsingTemplate('\sчерез\s', " "), // если в конце осталось слово через - уберем
+        новый ParsingTemplate('\s\s', " "),      // уберем лишние пробелы
+        новый ParsingTemplate('\s\s', " ")      // уберем лишние пробелы, вызываем второй раз, поскольку используем простой поиск и 3 пробела превращаются в 2
+    ]
+    
+;
+
+@ВПроекте
+метод all_values(): Массив<ParsingTemplate> 
+    пер ret = preprocess_values()
+   
+    ret.ДобавитьВсе(string_representations_values())
+    
+    ret.ДобавитьВсе(postprocess_values())
+    
+    возврат ret
+;
+
+@ВПроекте
+перечисление DateTimeSubst
+    y, // год
+    n, // месяц
+    d, // день
+    h, // час
+    m, // минута
+    w, // неделя
+
+    wda, // день недели
+    wdb,
+    wdc,
+    wdd,
+    wde,
+    wdf,
+    wdg,
+
+    sm, // утро
+    sd, // день
+    se, // вечер
+    sn, // ночь
+
+    nt, // не указано никакое время, ставим спец.время
+    nd, // не указана никакая дата
+
+    by, // признак начала периода
+    bn,
+    bw,
+    bd,
+    bh,
+
+    // добавки к частям даты/времени, с плюсом или минусом
+    y_a,
+    n_a,
+    d_a,
+    h_a,
+    m_a,
+    w_a
+;
+
+перечисление HourAdd12 
+    No,
+    Yes,
+    Check
+;
+
+структура DateTimeParts 
+    пер data: Соответствие<DateTimeSubst, Число>
+    пер client_date_time: DateTime
+    пер client_offset: Число
+
+    @ВПроекте
+    статический метод from(source: Строка, dt: DateTime, offset: Число): DateTimeParts
+        пер data = {
+            DateTimeSubst.y: get_num(source, [ParsingTemplate.from( '.*`y(\d+)`.*', " $1 " )]), 
+            DateTimeSubst.n: get_num(source, [ParsingTemplate.from( '.*`n(\d+)`.*', " $1 ") ]), 
+            DateTimeSubst.d: get_num(source, [ParsingTemplate.from( '.*`d(\d+)`.*', " $1 ") ]),
+            DateTimeSubst.h:get_num(source, [ParsingTemplate.from( '.*`h(\d+)`.*', " $1 ")  ]), 
+            DateTimeSubst.m:get_num(source, [ParsingTemplate.from( '.*`m(\d+)`.*', " $1 ")  ]), 
+            DateTimeSubst.w:get_num(source, [ParsingTemplate.from( '.*`w(\d+)`.*', " $1 ")  ]), 
+            DateTimeSubst.wda:get_num(source, [ParsingTemplate.from( '.*`wda(\d+)`.*', " $1 ") ,ParsingTemplate.from( '.*`wda`.*', " 1 ")  ]), 
+            DateTimeSubst.wdb:get_num(source, [ParsingTemplate.from( '.*`wdb(\d+)`.*', " $1 ") ,ParsingTemplate.from( '.*`wdb`.*', " 1 ")  ]), 
+            DateTimeSubst.wdc:get_num(source, [ParsingTemplate.from( '.*`wdc(\d+)`.*', " $1 ") ,ParsingTemplate.from( '.*`wdc`.*', " 1 ")  ]), 
+            DateTimeSubst.wdd:get_num(source, [ParsingTemplate.from( '.*`wdd(\d+)`.*', " $1 ") ,ParsingTemplate.from( '.*`wdd`.*', " 1 ")  ]), 
+            DateTimeSubst.wde:get_num(source, [ParsingTemplate.from( '.*`wde(\d+)`.*', " $1 ") ,ParsingTemplate.from( '.*`wde`.*', " 1 ")  ]), 
+            DateTimeSubst.wdf:get_num(source, [ParsingTemplate.from( '.*`wdf(\d+)`.*', " $1 ") ,ParsingTemplate.from( '.*`wdf`.*', " 1 ")  ]), 
+            DateTimeSubst.wdg:get_num(source, [ParsingTemplate.from( '.*`wdg(\d+)`.*', " $1 ") ,ParsingTemplate.from( '.*`wdg`.*', " 1 ")  ]), 
+            DateTimeSubst.sm:get_num(source,  [ ParsingTemplate.from( '.*`sm`.*', " 1 ")  ]), 
+            DateTimeSubst.sd:get_num(source,  [ ParsingTemplate.from( '.*`sd`.*', " 1 ")  ]), 
+            DateTimeSubst.se:get_num(source,  [ ParsingTemplate.from( '.*`se`.*', " 1 ")  ]), 
+            DateTimeSubst.sn:get_num(source,  [ ParsingTemplate.from( '.*`sn`.*', " 1 ")  ]), 
+            DateTimeSubst.nt:get_num(source,  [ ParsingTemplate.from( '.*`nt`.*', " 1 ")  ]), 
+            DateTimeSubst.nd:get_num(source,  [ ParsingTemplate.from( '.*`nd`.*', " 1 ")  ]), 
+            DateTimeSubst.by:get_num(source,  [ ParsingTemplate.from( '.*`by`.*', " 1 ")  ]), 
+            DateTimeSubst.bn:get_num(source,  [ ParsingTemplate.from( '.*`bn`.*', " 1 ")  ]), 
+            DateTimeSubst.bw:get_num(source,  [ ParsingTemplate.from( '.*`bw`.*', " 1 ")  ]), 
+            DateTimeSubst.bd:get_num(source,  [ ParsingTemplate.from( '.*`bd`.*', " 1 ")  ]), 
+            DateTimeSubst.bh:get_num(source,  [ ParsingTemplate.from( '.*`bh`.*', " 1 ")  ]), 
+            DateTimeSubst.y_a:get_num(source, [ ParsingTemplate.from( '.*`(\-|\+)y(\d+)`.*', " $1$2 ")  ]), 
+            DateTimeSubst.n_a:get_num(source, [ ParsingTemplate.from( '.*`(\-|\+)n(\d+)`.*', " $1$2 ")  ]), 
+            DateTimeSubst.d_a:get_num(source, [ ParsingTemplate.from( '.*`(\-|\+)d(\d+)`.*', " $1$2 ")  ]), 
+            DateTimeSubst.h_a:get_num(source, [ ParsingTemplate.from( '.*`(\-|\+)h(\d+)`.*', " $1$2 ")  ]), 
+            DateTimeSubst.m_a:get_num(source, [ ParsingTemplate.from( '.*`(\-|\+)m(\d+)`.*', " $1$2 ")  ]), 
+            DateTimeSubst.w_a:get_num(source, [ ParsingTemplate.from( '.*`(\-|\+)w(\d+)`.*', " $1$2 ")  ]) 
+        }
+        
+        возврат новый DateTimeParts(
+            data,
+            dt,
+            offset
+        )
+    ;
+
+    //значение по умолчанию
+    статический метод get_missing_value(): Число 
+        возврат -100000
+    ;
+
+    // проверка значения по умолчанию
+    статический метод is_missing(vl: Число): Булево 
+        возврат (vl == get_missing_value())
+    ;
+
+    // Разбирает текстовые значения, пришедшие в строке и описанные в векторе
+    статический метод get_num(source: String, pa: Массив<ParsingTemplate>): Число 
+        // для p из pa
+        //     p.parse(source).trim()
+        // ;    
+        возврат 1
+    ;
+
+    // Получает значения из хэш таблицы
+    метод get_val(dts: DateTimeSubst) : Число 
+//        пер val = data.get(dts)
+//        возврат val
+        возврат 1
+    ;
+
+    // Рассчитывает время с учетом специальных значений
+  /*  метод get_special_hm() : Число, Число, Число {
+        // debug!("step 2: {}  ", self.get_val(&DateTimeSubst.nt) ;
+
+        // let sm = self.get_val(&DateTimeSubst.sm) == 1;
+        // let se = self.get_val(&DateTimeSubst.se) == 1;
+        // let sd = self.get_val(&DateTimeSubst.sd) == 1;
+        // let sn = self.get_val(&DateTimeSubst.sn) == 1;
+
+        if !is_missing(&self.get_val(&DateTimeSubst.sm)) {
+            (10, 0, 0)
+        } else if !is_missing(&self.get_val(&DateTimeSubst.sd)) {
+            (13, 0, 0)
+        } else if !is_missing(&self.get_val(&DateTimeSubst.se)) {
+            (20, 0, 0)
+        } else if !is_missing(&self.get_val(&DateTimeSubst.sn)) {
+            (12, 0, 12)
+        } else if !is_missing(&self.get_val(&DateTimeSubst.nt)) {
+            (10, 0, 0) // если не указано - ставим утро, возможно лучше такую ситуацию
+                       // обрабатывать в самом конце
+        } else {
+            (get_missing_value(), get_missing_value(), 0)
+        }
+    }
+*/
+
+    // добавляет к часам 12
+    метод get_hour_add(h: Число, sm: Булево, sd: Булево, se: Булево, sn: Булево, bd: Булево) : HourAdd12 
+        if h > 12 
+           возврат HourAdd12.No
+        else 
+           возврат HourAdd12.Yes
+            // утро - ничего добавлять не надо
+            // день - 1-6 - прибавляем
+/*            if sd && (1..=6).contains(&h) {
+                HourAdd12.Yes
+            }
+            // вечер - 4-11 - прибавляем
+            else if se && (4..=12).contains(&h) {
+                HourAdd12.Yes
+            }
+            // ночь - 10-11 - прибавляем
+            else if sn && (10..=12).contains(&h) {
+                HourAdd12.Yes
+            }
+            // никаких признаков нет - 1-6 - прибавляем
+            else if !sm && !sd && !se && !sn {
+                if (1..=5).contains(&h) {
+                    // это точно день
+                    HourAdd12.Yes
+                } else if bd {
+                    // Переходим на след.день
+                    HourAdd12.No
+                } else {
+                    // а вот тут надо проверить
+                    HourAdd12.Check //
+                }
+            } else {
+                HourAdd12.No
+            }
+*/
+        ;
+       
+    ;
+
+/*
+    // Получает начало недели
+    fn get_begin_of_week(dt: NaiveDateTime) : NaiveDateTime {
+        let delta = dt.weekday().num_days_from_monday();
+        if delta == 0 {
+            dt
+        } else {
+            dt.checked_sub_days(Days.new(delta as u64)).unwrap()
+        }
+    }
+
+    // Получает день недели.
+    fn get_day_of_week(dt: NaiveDateTime, other: Weekday) : NaiveDateTime {
+        let delta_curr = dt.weekday().num_days_from_monday() as i16;
+        let delta_other = other.num_days_from_monday() as i16;
+        let delta = delta_other - delta_curr;
+
+        if delta == 0 {
+            dt
+        } else {
+            dt.checked_add_signed(TimeDelta.days(delta as i64))
+                .unwrap()
+
+        }
+    }
+
+    // Анализирует день недели и возвращает новую дату
+    fn analyse_day_of_week(&self, dt: NaiveDateTime) : NaiveDateTime {
+        let l_arr = [
+            (&DateTimeSubst.wda, Weekday.Mon),
+            (&DateTimeSubst.wdb, Weekday.Tue),
+            (&DateTimeSubst.wdc, Weekday.Wed),
+            (&DateTimeSubst.wdd, Weekday.Thu),
+            (&DateTimeSubst.wde, Weekday.Fri),
+            (&DateTimeSubst.wdf, Weekday.Sat),
+            (&DateTimeSubst.wdg, Weekday.Sun),
+        ];
+
+        let r = l_arr.iter().find_map(|l| {
+            let val = self.get_val(l.0);
+            if !is_missing(&val) {
+                // нашелся день недели в строке
+                Some((val, l.1))
+            } else {
+                None
+            }
+        });
+
+        if r.is_none() {
+            return dt;
+        }
+
+        let l = r.unwrap();
+        let mut val = l.0;
+        let dtnew = get_day_of_week(dt, l.1);
+        if dtnew <= dt {
+            // если дата меньше или равна текущей - добавляет неделю
+            val += 1;
+        }
+        // debug!("step 2 {:?} {}", l, dtnew);
+
+        dtnew
+            .checked_add_days(Days.new(7 * (val - 1) as u64))
+            .unwrap()
+    }
+
+    // Сравнивает с переданной датой и сдвигает, если возможно
+    fn compare_with_client_date(&self, dt: NaiveDateTime, haddenum: HourAdd12) : NaiveDateTime {
+        if dt < self.client_date_time.naive_local()
+            && haddenum == HourAdd12.Check
+            && dt.checked_add_signed(TimeDelta.hours(12)).unwrap()
+                > self.client_date_time.naive_local()
+        {
+            return dt.checked_add_signed(TimeDelta.hours(12)).unwrap();
+        }
+        if dt < self.client_date_time.naive_local() {
+            let val = self.get_val(&DateTimeSubst.d);
+            if is_missing(&val) {
+                // попробуем добавить день
+                let dtnew = dt.checked_add_days(Days.new(1)).unwrap();
+
+                if dtnew >= self.client_date_time.naive_local() {
+                    return dtnew;
+                }
+            }
+
+            let val = self.get_val(&DateTimeSubst.n);
+            if is_missing(&val) {
+                // попробуем добавить месяц
+                let dtnew = dt.checked_add_months(Months.new(1)).unwrap();
+
+                if dtnew >= self.client_date_time.naive_local() {
+                    return dtnew;
+                }
+            }
+
+            let val = self.get_val(&DateTimeSubst.y);
+            if is_missing(&val) {
+                // попробуем добавить год
+                let year = dt.year();
+                let dtnew = dt.with_year(year + 1).unwrap();
+
+                if dtnew >= self.client_date_time.naive_local() {
+                    return dtnew;
+                }
+            }
+
+            dt
+        } else {
+            dt
+        }
+    }
+
+    // Разбирает подготовленную хэш таблицу
+    // - сразу вычисляется год, как указанный, так и с учетом добавок
+    // - определяются начала периодов, зависящие друг от друга
+    // - находится месяц и день с учетом начал периодов.
+    // - создается дата без времени
+    // - добавляется месяц и день с учетом добавок
+    // - вычисляется день недели
+    fn parse_data(&self) : Option<NaiveDateTime> {
+        if !is_missing(&self.get_val(&DateTimeSubst.nd))
+            && !is_missing(&self.get_val(&DateTimeSubst.nt))
+        {
+            // если нет указаний ни на дату, ни на время - возвращаемся
+            return None;
+        }
+
+        let mut y = self.get_val(&DateTimeSubst.y);
+        let y_spec = y != get_missing_value(); // пришел конкретный год
+        if !y_spec {
+            // не было года - выберем из текущей даты
+            y = self.client_date_time.year() as i16
+        };
+        // Год изменим сразу здесь
+        let y_a = self.get_val(&DateTimeSubst.y_a);
+        if y_a != get_missing_value() {
+            y += y_a;
+        };
+
+        // начала периодов, кажый следующий период зависит от предыдущего
+        let by = self.get_val(&DateTimeSubst.by) == 1;
+        let bn = by || self.get_val(&DateTimeSubst.bn) == 1;
+        let bd = bn || self.get_val(&DateTimeSubst.bd) == 1;
+        let bh = bd || self.get_val(&DateTimeSubst.bh) == 1;
+        let bw = self.get_val(&DateTimeSubst.bw) == 1; // начало недели от других не зависит
+
+        let mut n = self.get_val(&DateTimeSubst.n);
+        let n_spec = n != get_missing_value(); // пришел конкретный месяц
+        if !n_spec {
+            // не было месяца - выберем из текущей даты
+            if by {
+                n = 1
+            } else {
+                n = self.client_date_time.month() as i16
+            }
+        }
+
+        let mut d = self.get_val(&DateTimeSubst.d);
+        let d_spec = d != get_missing_value(); // пришел конкретный день
+        if !d_spec {
+            if bn {
+                d = 1 //Начало месяца
+            } else {
+                d = self.client_date_time.day() as i16
+            }
+        }
+
+        // сначала дата без времени
+        let mut ret = NaiveDateTime.new(
+            NaiveDate.from_ymd_opt(y as i32, n as u32, d as u32).unwrap(),
+            NaiveTime.MIN,
+        );
+
+        let n_a = self.get_val(&DateTimeSubst.n_a);
+        if n_a != get_missing_value() {
+            if n_a > 0 {
+                ret = ret.checked_add_months(Months.new(n_a as u32)).unwrap();
+            } else {
+                ret = ret.checked_sub_months(Months.new(n_a as u32)).unwrap();
+            }
+        };
+
+        let w_a = self.get_val(&DateTimeSubst.w_a);
+        if w_a != get_missing_value() {
+            if w_a > 0 {
+                ret = ret.checked_add_days(Days.new(7 * w_a as u64)).unwrap();
+            } else {
+                ret = ret.checked_sub_days(Days.new(7 * w_a as u64)).unwrap();
+            }
+        };
+
+        //Начало недели
+        if bw {
+            ret = get_begin_of_week(ret);
+        };
+
+        let d_a = self.get_val(&DateTimeSubst.d_a);
+        if d_a != get_missing_value() {
+            if d_a > 0 {
+                ret = ret.checked_add_days(Days.new(d_a as u64)).unwrap();
+            } else {
+                ret = ret.checked_sub_days(Days.new(d_a as u64)).unwrap();
+            }
+        };
+
+        // Дни недели
+        ret = self.analyse_day_of_week(ret);
+
+        // Время
+        let mut h = self.get_val(&DateTimeSubst.h);
+        let h_spec = h != get_missing_value(); // пришел конкретный час
+        let mut m = self.get_val(&DateTimeSubst.m);
+        let m_spec = m != get_missing_value(); // пришла конкретная минута
+        let mut hadd: i16 = 0; // добавка к часам 12 в зависимости от времени дня
+        let mut haddenum = HourAdd12.No; // добавка к часам (перечисление) в зависимости от времени дня
+
+        if !h_spec && !m_spec {
+            (h, m, hadd) = self.get_special_hm();
+        } else if h_spec && h <= 12 {
+            // Проверим, что время указано относительно
+            let sm = self.get_val(&DateTimeSubst.sm) == 1;
+            let se = self.get_val(&DateTimeSubst.se) == 1;
+            let sd = self.get_val(&DateTimeSubst.sd) == 1;
+            let sn = self.get_val(&DateTimeSubst.sn) == 1;
+
+            haddenum = get_hour_add(h, sm, sd, se, sn, bd);
+            if haddenum == HourAdd12.Yes {
+                hadd = 12;
+            }
+        }
+
+        debug!("step 1: {} {} {:?} ", h, m, haddenum);
+
+        if is_missing(&h) {
+            //Начало дня
+            if bd {
+                h = 0;
+                m = 0;
+            } else {
+                h = self.client_date_time.hour() as i16
+            }
+        }
+
+        if m == get_missing_value() {
+            //Начало часа
+            if bd || bh {
+                m = 0;
+            } else {
+                m = self.client_date_time.minute() as i16
+            }
+        }
+
+        ret = NaiveDateTime.new(
+            ret.date(),
+            NaiveTime.from_hms_opt(h as u32, m as u32, 0).unwrap(),
+        );
+
+        let h_a = self.get_val(&DateTimeSubst.h_a);
+        if h_a != get_missing_value() {
+            hadd += h_a; // в hadd  соберем все добавления часов
+        };
+
+        if hadd != 0 {
+            ret = ret
+                .checked_add_signed(TimeDelta.hours(hadd as i64))
+                .unwrap();
+        }
+
+        let m_a = self.get_val(&DateTimeSubst.m_a);
+        if m_a != get_missing_value() {
+            ret = ret
+                .checked_add_signed(TimeDelta.minutes(m_a as i64))
+                .unwrap();
+        };
+
+        // Должны сравнить с переданной датой и сдвинуть на опр.значения
+        ret = self.compare_with_client_date(ret, haddenum);
+
+        Some(ret)
+    ;
+*/
+
+;
+
