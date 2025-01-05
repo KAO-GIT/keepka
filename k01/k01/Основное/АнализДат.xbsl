@@ -412,6 +412,12 @@
     Check
 ;
 
+структура Fields3
+    знч F1: Число
+    знч F2: Число
+    знч F3: Число
+;
+
 структура DateTimeParts 
     пер data: Соответствие<DateTimeSubst, Число>
     пер client_date_time: DateTime
@@ -469,199 +475,217 @@
         возврат (vl == get_missing_value())
     ;
 
-    // Разбирает текстовые значения, пришедшие в строке и описанные в векторе
+    // Разбирает текстовые значения, пришедшие в строке и описанные в массиве
     статический метод get_num(source: String, pa: Массив<ParsingTemplate>): Число 
-        // для p из pa
-        //     p.parse(source).trim()
-        // ;    
-        возврат 1
+        для p из pa
+            попытка
+                знч СтрНом = p.parse(source).Сократить()
+                если не СтрНом.Пусто()
+                    знч Ном = новый Число( СтрНом )
+                    возврат Ном
+                ;
+            поймать Искл: ИсключениеНедопустимыйФормат
+            ;
+        ;    
+        возврат get_missing_value()
     ;
 
     // Получает значения из хэш таблицы
     метод get_val(dts: DateTimeSubst) : Число 
-//        пер val = data.get(dts)
-//        возврат val
-        возврат 1
+        пер vl = data.Получить(dts)
+        возврат vl
     ;
 
     // Рассчитывает время с учетом специальных значений
-  /*  метод get_special_hm() : Число, Число, Число {
-        // debug!("step 2: {}  ", self.get_val(&DateTimeSubst.nt) ;
+    метод get_special_hm() : Fields3 
 
-        // let sm = self.get_val(&DateTimeSubst.sm) == 1;
-        // let se = self.get_val(&DateTimeSubst.se) == 1;
-        // let sd = self.get_val(&DateTimeSubst.sd) == 1;
-        // let sn = self.get_val(&DateTimeSubst.sn) == 1;
+        if не is_missing(get_val(DateTimeSubst.sm)) 
+            возврат новый Fields3(10, 0, 0)
+        else if не is_missing(get_val(DateTimeSubst.sd)) 
+            возврат новый Fields3(13, 0, 0)
+        else if не is_missing(get_val(DateTimeSubst.se)) 
+            возврат новый Fields3(20, 0, 0)
+        else if не is_missing(get_val(DateTimeSubst.sn)) 
+            возврат новый Fields3(12, 0, 12)
+        else if не is_missing(get_val(DateTimeSubst.nt)) 
+            возврат новый Fields3(10, 0, 0) // если не указано - ставим утро, возможно лучше такую ситуацию
+                    // обрабатывать в самом конце
+        else 
+            возврат новый Fields3(get_missing_value(), get_missing_value(), 0)
+        ;
+    ;
 
-        if !is_missing(&self.get_val(&DateTimeSubst.sm)) {
-            (10, 0, 0)
-        } else if !is_missing(&self.get_val(&DateTimeSubst.sd)) {
-            (13, 0, 0)
-        } else if !is_missing(&self.get_val(&DateTimeSubst.se)) {
-            (20, 0, 0)
-        } else if !is_missing(&self.get_val(&DateTimeSubst.sn)) {
-            (12, 0, 12)
-        } else if !is_missing(&self.get_val(&DateTimeSubst.nt)) {
-            (10, 0, 0) // если не указано - ставим утро, возможно лучше такую ситуацию
-                       // обрабатывать в самом конце
-        } else {
-            (get_missing_value(), get_missing_value(), 0)
-        }
-    }
-*/
 
     // добавляет к часам 12
     метод get_hour_add(h: Число, sm: Булево, sd: Булево, se: Булево, sn: Булево, bd: Булево) : HourAdd12 
         if h > 12 
            возврат HourAdd12.No
         else 
-           возврат HourAdd12.Yes
             // утро - ничего добавлять не надо
             // день - 1-6 - прибавляем
-/*            if sd && (1..=6).contains(&h) {
-                HourAdd12.Yes
-            }
-            // вечер - 4-11 - прибавляем
-            else if se && (4..=12).contains(&h) {
-                HourAdd12.Yes
-            }
-            // ночь - 10-11 - прибавляем
-            else if sn && (10..=12).contains(&h) {
-                HourAdd12.Yes
-            }
+            if sd и h>=1 и h<=6 
+                возврат HourAdd12.Yes
+            
+            // вечер - 4-12 - прибавляем
+            else if se и h>=4 и h<=12 
+                возврат HourAdd12.Yes
+            
+            // ночь - 10-12 - прибавляем
+            else if sn и h>=10 и h<=12 
+                возврат HourAdd12.Yes
+            
             // никаких признаков нет - 1-6 - прибавляем
-            else if !sm && !sd && !se && !sn {
-                if (1..=5).contains(&h) {
+            else if не sm и не sd и не se и не sn 
+                if h>=1 и h<=5 
                     // это точно день
-                    HourAdd12.Yes
-                } else if bd {
+                    возврат HourAdd12.Yes
+                else if bd 
                     // Переходим на след.день
-                    HourAdd12.No
-                } else {
+                    возврат HourAdd12.No
+                else 
                     // а вот тут надо проверить
-                    HourAdd12.Check //
-                }
-            } else {
-                HourAdd12.No
-            }
-*/
+                    возврат HourAdd12.Check 
+                ;
+            else 
+                возврат HourAdd12.No
+            ;
         ;
        
     ;
 
-/*
+
     // Получает начало недели
-    fn get_begin_of_week(dt: NaiveDateTime) : NaiveDateTime {
-        let delta = dt.weekday().num_days_from_monday();
-        if delta == 0 {
-            dt
-        } else {
-            dt.checked_sub_days(Days.new(delta as u64)).unwrap()
-        }
-    }
+    метод get_begin_of_week(dt: DateTime) : DateTime 
+        
+        знч День = 1д
+        знч delta = dt.ДеньНедели().Индекс
+        if delta == 0 
+            возврат dt
+        else 
+            возврат dt - День*delta
+        ;
+    ;
 
     // Получает день недели.
-    fn get_day_of_week(dt: NaiveDateTime, other: Weekday) : NaiveDateTime {
-        let delta_curr = dt.weekday().num_days_from_monday() as i16;
-        let delta_other = other.num_days_from_monday() as i16;
-        let delta = delta_other - delta_curr;
+    метод get_day_of_week(dt: DateTime, other: ДеньНедели) : DateTime 
+        
+        знч День = 1д
 
-        if delta == 0 {
-            dt
-        } else {
-            dt.checked_add_signed(TimeDelta.days(delta as i64))
-                .unwrap()
+        знч delta_curr = dt.ДеньНедели().Индекс
+        знч delta_other = other.Индекс
+        знч delta = delta_other - delta_curr
 
-        }
-    }
+        if delta == 0 
+            возврат dt
+        else 
+            возврат dt + День*delta
+        ;
+    ;
 
     // Анализирует день недели и возвращает новую дату
-    fn analyse_day_of_week(&self, dt: NaiveDateTime) : NaiveDateTime {
-        let l_arr = [
-            (&DateTimeSubst.wda, Weekday.Mon),
-            (&DateTimeSubst.wdb, Weekday.Tue),
-            (&DateTimeSubst.wdc, Weekday.Wed),
-            (&DateTimeSubst.wdd, Weekday.Thu),
-            (&DateTimeSubst.wde, Weekday.Fri),
-            (&DateTimeSubst.wdf, Weekday.Sat),
-            (&DateTimeSubst.wdg, Weekday.Sun),
-        ];
+    метод analyse_day_of_week(dt: DateTime) : DateTime 
+        знч День = 1д
+        
+        знч l_arr = [
+            DateTimeSubst.wda, 
+            DateTimeSubst.wdb, 
+            DateTimeSubst.wdc, 
+            DateTimeSubst.wdd, 
+            DateTimeSubst.wde, 
+            DateTimeSubst.wdf, 
+            DateTimeSubst.wdg
+        ]
+        
+        знч d_arr = [
+            ДеньНедели.Понедельник,
+            ДеньНедели.Вторник,
+            ДеньНедели.Среда,
+            ДеньНедели.Четверг,
+            ДеньНедели.Пятница,
+            ДеньНедели.Суббота,
+            ДеньНедели.Воскресенье
+        ]
 
-        let r = l_arr.iter().find_map(|l| {
-            let val = self.get_val(l.0);
-            if !is_missing(&val) {
+        пер нед: Число? = Неопределено 
+        пер дн: ДеньНедели? = Неопределено 
+        
+        для Индекс = 0 по l_arr.Граница() 
+            пер r = l_arr.Получить(Индекс)        
+            знч vl = get_val(r) 
+            if не is_missing(vl) 
                 // нашелся день недели в строке
-                Some((val, l.1))
-            } else {
-                None
-            }
-        });
+                нед = vl
+                дн = d_arr.Получить(Индекс)
+                прервать
+            ;
+        ;
 
-        if r.is_none() {
-            return dt;
-        }
+        if нед == Неопределено
+            return dt
+        ;
 
-        let l = r.unwrap();
-        let mut val = l.0;
-        let dtnew = get_day_of_week(dt, l.1);
-        if dtnew <= dt {
+        пер dtnew = get_day_of_week(dt, дн)
+        if dtnew <= dt 
             // если дата меньше или равна текущей - добавляет неделю
-            val += 1;
-        }
+            нед += 1
+        ;
         // debug!("step 2 {:?} {}", l, dtnew);
 
-        dtnew
-            .checked_add_days(Days.new(7 * (val - 1) as u64))
-            .unwrap()
-    }
+        возврат dtnew + День * (7 * (нед - 1))
+    ;
+    
 
     // Сравнивает с переданной датой и сдвигает, если возможно
-    fn compare_with_client_date(&self, dt: NaiveDateTime, haddenum: HourAdd12) : NaiveDateTime {
-        if dt < self.client_date_time.naive_local()
-            && haddenum == HourAdd12.Check
-            && dt.checked_add_signed(TimeDelta.hours(12)).unwrap()
-                > self.client_date_time.naive_local()
-        {
-            return dt.checked_add_signed(TimeDelta.hours(12)).unwrap();
-        }
-        if dt < self.client_date_time.naive_local() {
-            let val = self.get_val(&DateTimeSubst.d);
-            if is_missing(&val) {
+    метод compare_with_client_date(dt: DateTime, haddenum: HourAdd12) : DateTime 
+        знч Ч12 = 12ч
+        знч День = 1д
+        
+        if dt < client_date_time
+            и haddenum == HourAdd12.Check
+            и dt+Ч12 > client_date_time
+        
+            return dt+Ч12
+        ;
+        
+        if dt < client_date_time 
+            пер vl = get_val(DateTimeSubst.d)
+            
+            if is_missing(vl) 
                 // попробуем добавить день
-                let dtnew = dt.checked_add_days(Days.new(1)).unwrap();
+                знч dtnew = dt+День
 
-                if dtnew >= self.client_date_time.naive_local() {
-                    return dtnew;
-                }
-            }
+                if dtnew >= client_date_time 
+                    return dtnew
+                ;
+            ;
 
-            let val = self.get_val(&DateTimeSubst.n);
-            if is_missing(&val) {
+            vl = get_val(DateTimeSubst.n)
+            if is_missing(vl) 
                 // попробуем добавить месяц
-                let dtnew = dt.checked_add_months(Months.new(1)).unwrap();
+                знч dtnew = dt.ДобавитьМесяцы(1)
 
-                if dtnew >= self.client_date_time.naive_local() {
-                    return dtnew;
-                }
-            }
+                if dtnew >= client_date_time 
+                    return dtnew
+                ;
+            ;
 
-            let val = self.get_val(&DateTimeSubst.y);
-            if is_missing(&val) {
+            vl = get_val(DateTimeSubst.y)
+            if is_missing(vl) 
                 // попробуем добавить год
-                let year = dt.year();
-                let dtnew = dt.with_year(year + 1).unwrap();
+                знч гг = dt.Год
+                знч dtnew = dt.СГодом(гг + 1)
 
-                if dtnew >= self.client_date_time.naive_local() {
-                    return dtnew;
-                }
-            }
+                if dtnew >= client_date_time 
+                    return dtnew
+                ;
+            ;
 
-            dt
-        } else {
-            dt
-        }
-    }
-
+            возврат dt
+        else 
+            возврат dt
+        ;
+    ;
+/*
     // Разбирает подготовленную хэш таблицу
     // - сразу вычисляется год, как указанный, так и с учетом добавок
     // - определяются начала периодов, зависящие друг от друга
