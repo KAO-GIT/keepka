@@ -685,7 +685,7 @@
             возврат dt
         ;
     ;
-/*
+
     // Разбирает подготовленную хэш таблицу
     // - сразу вычисляется год, как указанный, так и с учетом добавок
     // - определяются начала периодов, зависящие друг от друга
@@ -693,168 +693,161 @@
     // - создается дата без времени
     // - добавляется месяц и день с учетом добавок
     // - вычисляется день недели
-    fn parse_data(&self) : Option<NaiveDateTime> {
-        if !is_missing(&self.get_val(&DateTimeSubst.nd))
-            && !is_missing(&self.get_val(&DateTimeSubst.nt))
-        {
+    метод parse_data() : DateTime? 
+        if не is_missing(get_val(DateTimeSubst.nd))
+            и не is_missing(get_val(DateTimeSubst.nt))
+        
             // если нет указаний ни на дату, ни на время - возвращаемся
-            return None;
-        }
+            return Неопределено
+        ;
 
-        let mut y = self.get_val(&DateTimeSubst.y);
-        let y_spec = y != get_missing_value(); // пришел конкретный год
-        if !y_spec {
+        пер y = get_val(DateTimeSubst.y)
+        знч y_spec = y != get_missing_value() // пришел конкретный год
+        
+        if не y_spec 
             // не было года - выберем из текущей даты
-            y = self.client_date_time.year() as i16
-        };
+            y = client_date_time.Год
+        ;
+        
         // Год изменим сразу здесь
-        let y_a = self.get_val(&DateTimeSubst.y_a);
-        if y_a != get_missing_value() {
-            y += y_a;
-        };
+        знч y_a = get_val(DateTimeSubst.y_a)
+        if y_a != get_missing_value() 
+            y += y_a
+        ;
 
         // начала периодов, кажый следующий период зависит от предыдущего
-        let by = self.get_val(&DateTimeSubst.by) == 1;
-        let bn = by || self.get_val(&DateTimeSubst.bn) == 1;
-        let bd = bn || self.get_val(&DateTimeSubst.bd) == 1;
-        let bh = bd || self.get_val(&DateTimeSubst.bh) == 1;
-        let bw = self.get_val(&DateTimeSubst.bw) == 1; // начало недели от других не зависит
+        знч by = get_val(DateTimeSubst.by) == 1
+        знч bn = by или get_val(DateTimeSubst.bn) == 1
+        знч bd = bn или get_val(DateTimeSubst.bd) == 1
+        знч bh = bd или get_val(DateTimeSubst.bh) == 1
+        знч bw = get_val(DateTimeSubst.bw) == 1 // начало недели от других не зависит
 
-        let mut n = self.get_val(&DateTimeSubst.n);
-        let n_spec = n != get_missing_value(); // пришел конкретный месяц
-        if !n_spec {
+        пер n = get_val(DateTimeSubst.n)
+        знч n_spec = n != get_missing_value() // пришел конкретный месяц
+        if не n_spec 
             // не было месяца - выберем из текущей даты
-            if by {
+            if by 
                 n = 1
-            } else {
-                n = self.client_date_time.month() as i16
-            }
-        }
+            else 
+                n = client_date_time.Месяц
+            ;
+        ;
 
-        let mut d = self.get_val(&DateTimeSubst.d);
-        let d_spec = d != get_missing_value(); // пришел конкретный день
-        if !d_spec {
-            if bn {
+        пер d = get_val(DateTimeSubst.d)
+        знч d_spec = d != get_missing_value() // пришел конкретный день
+        if не d_spec 
+            if bn 
                 d = 1 //Начало месяца
-            } else {
-                d = self.client_date_time.day() as i16
-            }
-        }
+            else 
+                d = client_date_time.День
+            ;
+        ;
 
         // сначала дата без времени
-        let mut ret = NaiveDateTime.new(
-            NaiveDate.from_ymd_opt(y as i32, n as u32, d as u32).unwrap(),
-            NaiveTime.MIN,
-        );
+        пер ret = новый ДатаВремя(y,n,d)
 
-        let n_a = self.get_val(&DateTimeSubst.n_a);
-        if n_a != get_missing_value() {
-            if n_a > 0 {
-                ret = ret.checked_add_months(Months.new(n_a as u32)).unwrap();
-            } else {
-                ret = ret.checked_sub_months(Months.new(n_a as u32)).unwrap();
-            }
-        };
+        знч n_a = get_val(DateTimeSubst.n_a)
+        if n_a != get_missing_value() 
+            if n_a > 0 
+                ret = ret.ДобавитьМесяцы(n_a)
+            else 
+                ret = ret.ДобавитьМесяцы(-n_a)
+            ;
+        ;
 
-        let w_a = self.get_val(&DateTimeSubst.w_a);
-        if w_a != get_missing_value() {
-            if w_a > 0 {
-                ret = ret.checked_add_days(Days.new(7 * w_a as u64)).unwrap();
-            } else {
-                ret = ret.checked_sub_days(Days.new(7 * w_a as u64)).unwrap();
-            }
-        };
+        знч w_a = get_val(DateTimeSubst.w_a)
+        if w_a != get_missing_value() 
+            if w_a > 0 
+                ret = ret.ДобавитьДни(7 * w_a)
+            else 
+                ret = ret.ДобавитьДни(-7 * w_a)
+            ;
+        ;
 
         //Начало недели
-        if bw {
-            ret = get_begin_of_week(ret);
-        };
+        if bw 
+            ret = get_begin_of_week(ret)
+        ;
 
-        let d_a = self.get_val(&DateTimeSubst.d_a);
-        if d_a != get_missing_value() {
-            if d_a > 0 {
-                ret = ret.checked_add_days(Days.new(d_a as u64)).unwrap();
-            } else {
-                ret = ret.checked_sub_days(Days.new(d_a as u64)).unwrap();
-            }
-        };
+        знч d_a = get_val(DateTimeSubst.d_a)
+        if d_a != get_missing_value() 
+            if d_a > 0 
+                ret = ret.ДобавитьДни(d_a)
+            else 
+                ret = ret.ДобавитьДни(-d_a)
+            ;
+        ;
 
         // Дни недели
-        ret = self.analyse_day_of_week(ret);
+        ret = analyse_day_of_week(ret)
 
         // Время
-        let mut h = self.get_val(&DateTimeSubst.h);
-        let h_spec = h != get_missing_value(); // пришел конкретный час
-        let mut m = self.get_val(&DateTimeSubst.m);
-        let m_spec = m != get_missing_value(); // пришла конкретная минута
-        let mut hadd: i16 = 0; // добавка к часам 12 в зависимости от времени дня
-        let mut haddenum = HourAdd12.No; // добавка к часам (перечисление) в зависимости от времени дня
+        пер h = get_val(DateTimeSubst.h)
+        знч h_spec = h != get_missing_value() // пришел конкретный час
+        пер m = get_val(DateTimeSubst.m)
+        знч m_spec = m != get_missing_value() // пришла конкретная минута
+        пер hadd: Число = 0 // добавка к часам 12 в зависимости от времени дня
+        пер haddenum = HourAdd12.No // добавка к часам (перечисление) в зависимости от времени дня
 
-        if !h_spec && !m_spec {
-            (h, m, hadd) = self.get_special_hm();
-        } else if h_spec && h <= 12 {
+        if не h_spec и не m_spec 
+            знч spec = get_special_hm()
+            h = spec.F1 
+            m = spec.F2 
+            hadd = spec.F3
+        else if h_spec и h <= 12 
             // Проверим, что время указано относительно
-            let sm = self.get_val(&DateTimeSubst.sm) == 1;
-            let se = self.get_val(&DateTimeSubst.se) == 1;
-            let sd = self.get_val(&DateTimeSubst.sd) == 1;
-            let sn = self.get_val(&DateTimeSubst.sn) == 1;
+            знч sm = get_val(DateTimeSubst.sm) == 1
+            знч se = get_val(DateTimeSubst.se) == 1
+            знч sd = get_val(DateTimeSubst.sd) == 1
+            знч sn = get_val(DateTimeSubst.sn) == 1
 
-            haddenum = get_hour_add(h, sm, sd, se, sn, bd);
-            if haddenum == HourAdd12.Yes {
-                hadd = 12;
-            }
-        }
+            haddenum = get_hour_add(h, sm, sd, se, sn, bd)
+            if haddenum == HourAdd12.Yes 
+                hadd = 12
+            ;
+        ;
 
-        debug!("step 1: {} {} {:?} ", h, m, haddenum);
+        //debug!("step 1: {} {} {:?} ", h, m, haddenum);
 
-        if is_missing(&h) {
+        if is_missing(h) 
             //Начало дня
-            if bd {
-                h = 0;
-                m = 0;
-            } else {
-                h = self.client_date_time.hour() as i16
-            }
-        }
+            if bd 
+                h = 0
+                m = 0
+            else 
+                h = client_date_time.Час 
+            ;
+        ;
 
-        if m == get_missing_value() {
+        if m == get_missing_value() 
             //Начало часа
-            if bd || bh {
-                m = 0;
-            } else {
-                m = self.client_date_time.minute() as i16
-            }
-        }
+            if bd или bh 
+                m = 0
+            else 
+                m = client_date_time.Минута
+            ;
+        ;
 
-        ret = NaiveDateTime.new(
-            ret.date(),
-            NaiveTime.from_hms_opt(h as u32, m as u32, 0).unwrap(),
-        );
+        ret = новый ДатаВремя(ret.Дата, новый Время(h,m,0))
 
-        let h_a = self.get_val(&DateTimeSubst.h_a);
-        if h_a != get_missing_value() {
-            hadd += h_a; // в hadd  соберем все добавления часов
-        };
+        знч h_a = get_val(DateTimeSubst.h_a)
+        if h_a != get_missing_value() 
+            hadd += h_a // в hadd  соберем все добавления часов
+        ;
 
-        if hadd != 0 {
-            ret = ret
-                .checked_add_signed(TimeDelta.hours(hadd as i64))
-                .unwrap();
-        }
+        if hadd != 0 
+            ret = ret.ДобавитьЧасы(hadd)
+        ;
 
-        let m_a = self.get_val(&DateTimeSubst.m_a);
-        if m_a != get_missing_value() {
-            ret = ret
-                .checked_add_signed(TimeDelta.minutes(m_a as i64))
-                .unwrap();
-        };
+        знч m_a = get_val(DateTimeSubst.m_a)
+        if m_a != get_missing_value() 
+            ret = ret.ДобавитьМинуты(m_a)
+        ;
 
         // Должны сравнить с переданной датой и сдвинуть на опр.значения
-        ret = self.compare_with_client_date(ret, haddenum);
+        ret = compare_with_client_date(ret, haddenum)
 
-        Some(ret)
+        возврат ret
     ;
-*/
-
 ;
 
