@@ -217,11 +217,19 @@
 @ВПроекте
 метод preprocess_values(): Массив<ParsingTemplate> 
     возврат [
+        // сначала уберем строки в двойных скобках - это разбирать не надо. тупо вызовем несколько раз
+        новый ParsingTemplate('<<[^<>]*?>>', " "),
+        новый ParsingTemplate('<<[^<>]*?>>', " "),
+        новый ParsingTemplate('<<[^<>]*?>>', " "),
+        новый ParsingTemplate('<<[^<>]*?>>', " "),
+        новый ParsingTemplate('<<[^<>]*?>>', " "),
+
         новый ParsingTemplate(' спустя ', " через "),
         новый ParsingTemplate(' полчаса ', " 30 минут "),
         новый ParsingTemplate(' в час ', " в 1 час "),
         новый ParsingTemplate(' через час ', " через 1 час "),
         новый ParsingTemplate(' через минуту ', " через 1 минуту "),
+        новый ParsingTemplate(' через сутки ', " через 24 часа "),
         новый ParsingTemplate(' через день ', " через 1 день "),
         новый ParsingTemplate(' через неделю ', " через 1 неделю "),
         новый ParsingTemplate(' через месяц ', " через 1 месяц  "),
