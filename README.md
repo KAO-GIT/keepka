@@ -14,9 +14,9 @@
 
 Напоминание придет в привязанный телеграм-бот.
 
-Полное описание приведено в статье (https://infostart.ru/1c/articles/2293765/)
+Полное описание приведено в статье https://infostart.ru/1c/articles/2293765/
 
-[Infostart](https://infostart.ru/bitrix/templates/sandbox_empty/assets/tpl/abo/img/logo.svg)
+![Infostart](https://infostart.ru/bitrix/templates/sandbox_empty/assets/tpl/abo/img/logo.svg)
 
 
 
