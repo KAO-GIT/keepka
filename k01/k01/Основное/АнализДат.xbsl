@@ -230,6 +230,7 @@
         новый ParsingTemplate(' полчаса ', " 30 минут "),
         новый ParsingTemplate(' в час ', " в 1 час "),
         новый ParsingTemplate(' через час ', " через 1 час "),
+        новый ParsingTemplate(' через полтора часа ', " через 90 минут "),
         новый ParsingTemplate(' через минуту ', " через 1 минуту "),
         новый ParsingTemplate(' через сутки ', " через 24 часа "),
         новый ParsingTemplate(' через день ', " через 1 день "),
