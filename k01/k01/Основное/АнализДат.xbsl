@@ -180,7 +180,7 @@
         новый ParsingTemplate('фев.*?', " `n02` "),
         новый ParsingTemplate('март.*?', " `n03` "),
         новый ParsingTemplate('апр.*?', " `n04` "),
-        новый ParsingTemplate('мая ', " `n05` "),
+        новый ParsingTemplate('мая .*?', " `n05` "),
         новый ParsingTemplate('июн.*?', " `n06` "),
         новый ParsingTemplate('июл.*?', " `n07` "),
         новый ParsingTemplate('авг.*?', " `n08` "),
